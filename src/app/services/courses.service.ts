@@ -13,9 +13,7 @@ export class CoursesService {
 
   loadAllCourses(): Observable<Course[]> {
     return this.db.collection('courses', ref => {
-      return ref
-        .where('seqNo', '==', 5)
-        .where('lessonsCount', '>=', 5);
+      return ref.orderBy('seqNo');
     }).snapshotChanges()
       .pipe(
         map(snaps => {
