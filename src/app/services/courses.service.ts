@@ -12,14 +12,17 @@ export class CoursesService {
   constructor(private db: AngularFirestore) { }
 
   loadAllCourses(): Observable<Course[]> {
-    return this.db.collection('courses', ref => ref.orderBy('seqNo', 'desc')) // 'asc' is the default value
-      .snapshotChanges()
+    return this.db.collection('courses', ref => {
+      return ref
+        .where('seqNo', '==', 5)
+        .where('lessonsCount', '>=', 5);
+    }).snapshotChanges()
       .pipe(
         map(snaps => {
           return snaps.map(snap => {
             return <Course> {
               id: snap.payload.doc.id,
-              ...snap.payload.doc.data() as {}
+              ...snap.payload.doc.data() as {} // cast needed to prevent TS error
             };
           });
         }),
