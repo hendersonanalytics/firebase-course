@@ -12,7 +12,8 @@ export class CoursesService {
   constructor(private db: AngularFirestore) { }
 
   loadAllCourses(): Observable<Course[]> {
-    return this.db.collection('courses').snapshotChanges()
+    return this.db.collection('courses', ref => ref.orderBy('seqNo', 'desc')) // 'asc' is the default value
+      .snapshotChanges()
       .pipe(
         map(snaps => {
           return snaps.map(snap => {
